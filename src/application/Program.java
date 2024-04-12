@@ -9,9 +9,9 @@ import java.util.Date;
 
 public class Program {
     public static void main(String[] args) {
-        Department obj = new Department(1,"Books");
-        Seller seller = new Seller(1,"Pedro","pedro@gmail.com", new Date(),1200.0,obj);
         SellerDao sellerDao = DaoFactory.createSellerDao();
+
+        Seller seller = sellerDao.findById(7);
         System.out.println(seller);
 
     }
