@@ -10,7 +10,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DepartmentDaoJDBC implements DepartmentDao {
     private Connection conn;
@@ -118,7 +121,32 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public List<Department> findAll() {
-        return List.of();
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try{
+            st = conn.prepareStatement(
+                    "SELECT department.* FROM department"
+            );
+            rs = st.executeQuery();
+
+            List<Department> list = new ArrayList<>();
+
+
+            while (rs.next()){
+
+                   Department dep = instantiateDepartment(rs);
+                   list.add(dep);
+            }
+            return list;
+
+        }
+        catch (SQLException e){
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
     }
     private Department instantiateDepartment(ResultSet rs) throws SQLException {
         Department dep = new Department();
